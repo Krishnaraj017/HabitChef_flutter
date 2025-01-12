@@ -9,8 +9,13 @@ class GetAddedHabitsCubit extends Cubit<GetAddedHabitState> {
 
   void getAllAddedHabits() async {
     final habits = await HabitDatabase.instance.getHabitsByDate(DateTime.now());
-
-    emit(GetAddedHabitSuccess(habits));
+    print(habits);
+    if (habits.isEmpty) {
+      print("pass++");
+      emit(GetAddedHabitIsEmpty());
+    } else {
+      emit(GetAddedHabitSuccess(habits));
+    }
   }
 
   void markHabitAsDone({required int id}) async {

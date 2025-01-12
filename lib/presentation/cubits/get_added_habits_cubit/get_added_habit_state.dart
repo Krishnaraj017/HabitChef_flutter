@@ -27,3 +27,9 @@ class GetAddedHabitError extends GetAddedHabitState {
   @override
   List<Object> get props => [message];
 }
+
+class GetAddedHabitIsEmpty extends GetAddedHabitState {
+  const GetAddedHabitIsEmpty();
+  @override
+  List<Object> get props => [];
+}

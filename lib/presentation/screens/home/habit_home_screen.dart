@@ -11,6 +11,7 @@ import 'package:habitchef/presentation/cubits/home/home_state.dart';
 import 'package:habitchef/presentation/cubits/progress_cubit/progress_cubit.dart';
 import 'package:habitchef/presentation/cubits/progress_cubit/progress_state.dart';
 import 'package:habitchef/presentation/routes/app_router.dart';
+import 'package:habitchef/utils/helper.dart';
 import 'package:intl/intl.dart';
 
 @RoutePage()
@@ -56,7 +57,8 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
                           builder: (context, state) {
                             if (state is UserLoaded) {
                               return Text(
-                                'Hi, ${state.userName}!',
+                                // 'Hi, ${state.userName}!',
+                                'Hi',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall
@@ -207,6 +209,41 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
                   return BlocBuilder<GetAddedHabitsCubit, GetAddedHabitState>(
                     builder: (context, state) {
                       if (state is GetAddedHabitSuccess) {
+                        if (state.habits.isEmpty) {
+                          // Display empty icon or message
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(vertical: 100.0),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.inbox_outlined,
+                                    size: 80,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'No Habits Added',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Start by adding your first habit!',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
                         if (index >= state.habits.length) {
                           return SizedBox
                               .shrink(); // Handle out of bounds index
@@ -218,13 +255,43 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
                               horizontal: 20.0, vertical: 8.0),
                           child: _HabitCard(habit: habit),
                         );
-                      }
-
-                      if (state is GetAddedHabitError) {
+                      } else if (state is GetAddedHabitIsEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 100.0),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.inbox_outlined,
+                                  size: 80,
+                                  color: Colors.grey[400],
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No Habits Added',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Start by adding your first habit!',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      } else if (state is GetAddedHabitError) {
                         return Center(child: Text(state.message));
                       }
 
-                      return const SizedBox.shrink();
+                      return const Center(child: Text('No Habits to track'));
                     },
                   );
                 },
@@ -243,7 +310,9 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
         builder: (context, state) {
           return FloatingActionButton(
             onPressed: () {
-              context.router.push(const AddHabitRoute());
+              context.router.push(AddHabitRoute(
+                  habitStatsCubit: context.read<HabitStatsCubit>(),
+                  getAddedHabitsCubit: context.read<GetAddedHabitsCubit>()));
             },
             backgroundColor: Colors.blue,
             child: const Icon(Icons.add),
@@ -313,12 +382,12 @@ class _HabitCardState extends State<_HabitCard> {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.amber,
+            color: HabitVisualHelper.getColorForHabit(widget.habit.title),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(
-            Icons.abc,
-            color: Colors.green,
+          child: Icon(
+            HabitVisualHelper.getIconForHabit(widget.habit.title),
+            color: Colors.white,
           ),
         ),
         title: Text(

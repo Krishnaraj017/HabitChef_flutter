@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 class HabitModel {
   final int? id;
@@ -55,19 +57,32 @@ class HabitDatabase {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('habits.db');
+    _database = await _initDB();
     return _database!;
   }
 
-  Future<Database> _initDB(String filePath) async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, filePath);
-
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+  Future<Database> _initDB() async {
+    // Platform-specific database initialization
+    if (kIsWeb) {
+      // Web-specific initialization
+      databaseFactory = databaseFactoryFfiWeb;
+      return await openDatabase(
+        'habits_web.db',
+        version: 1,
+        onCreate: _createDB,
+        // onUpgrade: _onUpgrade,
+      );
+    } else {
+      // Mobile/Desktop initialization
+      final dbPath = await getDatabasesPath();
+      final path = join(dbPath, 'habits.db');
+      return await openDatabase(
+        path,
+        version: 1,
+        onCreate: _createDB,
+        // onUpgrade: _onUpgrade,
+      );
+    }
   }
 
   Future<void> _createDB(Database db, int version) async {

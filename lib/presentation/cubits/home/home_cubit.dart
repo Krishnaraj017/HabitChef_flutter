@@ -11,7 +11,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<String?> getUser() async {
     var res = await _userRepository.getUser();
-    emit(UserLoaded(res!));
+    emit(UserLoaded(res??''));
     return res;
   }
 }

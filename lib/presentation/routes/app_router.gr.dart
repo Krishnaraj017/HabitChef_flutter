@@ -30,10 +30,19 @@ class AddFoodRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AddHabitScreen]
-class AddHabitRoute extends PageRouteInfo<void> {
-  const AddHabitRoute({List<PageRouteInfo>? children})
-      : super(
+class AddHabitRoute extends PageRouteInfo<AddHabitRouteArgs> {
+  AddHabitRoute({
+    Key? key,
+    required GetAddedHabitsCubit getAddedHabitsCubit,
+    required HabitStatsCubit habitStatsCubit,
+    List<PageRouteInfo>? children,
+  }) : super(
           AddHabitRoute.name,
+          args: AddHabitRouteArgs(
+            key: key,
+            getAddedHabitsCubit: getAddedHabitsCubit,
+            habitStatsCubit: habitStatsCubit,
+          ),
           initialChildren: children,
         );
 
@@ -42,9 +51,34 @@ class AddHabitRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return WrappedRoute(child: const AddHabitScreen());
+      final args = data.argsAs<AddHabitRouteArgs>();
+      return WrappedRoute(
+          child: AddHabitScreen(
+        key: args.key,
+        getAddedHabitsCubit: args.getAddedHabitsCubit,
+        habitStatsCubit: args.habitStatsCubit,
+      ));
     },
   );
+}
+
+class AddHabitRouteArgs {
+  const AddHabitRouteArgs({
+    this.key,
+    required this.getAddedHabitsCubit,
+    required this.habitStatsCubit,
+  });
+
+  final Key? key;
+
+  final GetAddedHabitsCubit getAddedHabitsCubit;
+
+  final HabitStatsCubit habitStatsCubit;
+
+  @override
+  String toString() {
+    return 'AddHabitRouteArgs{key: $key, getAddedHabitsCubit: $getAddedHabitsCubit, habitStatsCubit: $habitStatsCubit}';
+  }
 }
 
 /// generated route for

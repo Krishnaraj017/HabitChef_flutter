@@ -3,12 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habitchef/presentation/cubits/add_habit_cubit/add_habit_cubit.dart';
 import 'package:habitchef/presentation/cubits/add_habit_cubit/add_habit_state.dart';
+import 'package:habitchef/presentation/cubits/get_added_habits_cubit/get_added_habits_cubit.dart';
+import 'package:habitchef/presentation/cubits/progress_cubit/progress_cubit.dart';
 import 'package:habitchef/presentation/routes/app_router.dart';
 import 'package:habitchef/utils/extensions/timeOfDayToDateTime.dart';
 
 @RoutePage()
 class AddHabitScreen extends StatefulWidget implements AutoRouteWrapper {
-  const AddHabitScreen({super.key});
+  final GetAddedHabitsCubit getAddedHabitsCubit;
+  final HabitStatsCubit habitStatsCubit;
+  const AddHabitScreen(
+      {super.key,
+      required this.getAddedHabitsCubit,
+      required this.habitStatsCubit});
 
   @override
   State<AddHabitScreen> createState() => _AddHabitScreenState();
@@ -19,6 +26,8 @@ class AddHabitScreen extends StatefulWidget implements AutoRouteWrapper {
       BlocProvider(
         create: (_) => AddHabitCubit(),
       ),
+      BlocProvider.value(value: getAddedHabitsCubit),
+      BlocProvider.value(value: habitStatsCubit),
       // BlocProvider(create: (_) => GetAddedHabitsCubit())
     ], child: this);
   }
@@ -99,7 +108,8 @@ class _AddHabitScreenState extends State<AddHabitScreen>
               backgroundColor: Colors.green,
             ),
           );
-
+          widget.getAddedHabitsCubit.getAllAddedHabits();
+          widget.habitStatsCubit.fetchTodayStats();
           context.router.maybePop();
         }
       },
