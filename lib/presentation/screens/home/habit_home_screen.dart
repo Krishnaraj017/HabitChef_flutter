@@ -25,10 +25,10 @@ class HabitHomeScreen extends StatefulWidget implements AutoRouteWrapper {
   Widget wrappedRoute(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider(create: (_) => getIt<HomeCubit>()..getUser()),
-      BlocProvider(create: (_) => HabitStatsCubit()..fetchTodayStats()),
-      BlocProvider(create: (_) => getIt<AddHabitCubit>()),
       BlocProvider(
           create: (_) => getIt<GetAddedHabitsCubit>()..getAllAddedHabits()),
+      BlocProvider(create: (_) => getIt<HabitStatsCubit>()..fetchTodayStats()),
+      BlocProvider(create: (_) => getIt<AddHabitCubit>()),
     ], child: this);
   }
 }
@@ -208,54 +208,11 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
                 (context, index) {
                   return BlocBuilder<GetAddedHabitsCubit, GetAddedHabitState>(
                     builder: (context, state) {
-                      if (state is GetAddedHabitSuccess) {
-                        if (state.habits.isEmpty) {
-                          // Display empty icon or message
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 100.0),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.inbox_outlined,
-                                    size: 80,
-                                    color: Colors.grey[400],
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'No Habits Added',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Start by adding your first habit!',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[500],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }
-                        if (index >= state.habits.length) {
-                          return SizedBox
-                              .shrink(); // Handle out of bounds index
-                        }
+                      print(state.props);
+                      if (state is GetAddedHabitIsEmpty) {
+                        print(state);
 
-                        final habit = state.habits[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 8.0),
-                          child: _HabitCard(habit: habit),
-                        );
-                      } else if (state is GetAddedHabitIsEmpty) {
+                        print("this is the state ++++");
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 100.0),
                           child: Center(
@@ -263,7 +220,7 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.inbox_outlined,
+                                  Icons.hourglass_empty,
                                   size: 80,
                                   color: Colors.grey[400],
                                 ),
@@ -287,19 +244,28 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
                             ),
                           ),
                         );
+                      } else if (state is GetAddedHabitSuccess) {
+                        print("this is success");
+
+                        final habit = state.habits[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 8.0),
+                          child: _HabitCard(habit: habit),
+                        );
                       } else if (state is GetAddedHabitError) {
                         return Center(child: Text(state.message));
                       }
 
-                      return const Center(child: Text('No Habits to track'));
+                      return SizedBox.shrink();
                     },
                   );
                 },
-                // Add childCount to avoid infinite scrolling
+                //Add childCount to avoid infinite scrolling
                 childCount: context.select((GetAddedHabitsCubit cubit) =>
                     cubit.state is GetAddedHabitSuccess
                         ? (cubit.state as GetAddedHabitSuccess).habits.length
-                        : 0),
+                        : 1),
               ),
             ),
           ],
@@ -411,6 +377,7 @@ class _HabitCardState extends State<_HabitCard> {
             onPressed: () {
               print("clivkng");
               print(widget.habit.isDone);
+
               // Create a new HabitModel with updated isDone value
               final updatedHabit =
                   widget.habit.copyWith(isDone: !widget.habit.isDone);
@@ -422,6 +389,7 @@ class _HabitCardState extends State<_HabitCard> {
               context
                   .read<GetAddedHabitsCubit>()
                   .markHabitAsDone(id: widget.habit.id!);
+              context.read<HabitStatsCubit>().fetchTodayStats();
             }),
       ),
     );

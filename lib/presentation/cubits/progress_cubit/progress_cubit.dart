@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habitchef/data/models/habit.dart';
 import 'package:habitchef/presentation/cubits/progress_cubit/progress_state.dart';
-
+import 'package:injectable/injectable.dart';
+@injectable
 class HabitStatsCubit extends Cubit<HabitStatsState> {
   HabitStatsCubit() : super(const HabitStatsState());
 

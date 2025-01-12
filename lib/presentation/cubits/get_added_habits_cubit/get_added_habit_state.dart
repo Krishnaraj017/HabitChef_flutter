@@ -14,6 +14,12 @@ class GetAddedHabitInitial extends GetAddedHabitState {
   List<Object> get props => [];
 }
 
+class GetAddedHabitIsEmpty extends GetAddedHabitState {
+  const GetAddedHabitIsEmpty();
+  @override
+  List<Object> get props => [];
+}
+
 class GetAddedHabitSuccess extends GetAddedHabitState {
   final List<HabitModel> habits;
   const GetAddedHabitSuccess(this.habits);
@@ -26,10 +32,4 @@ class GetAddedHabitError extends GetAddedHabitState {
   const GetAddedHabitError(this.message);
   @override
   List<Object> get props => [message];
-}
-
-class GetAddedHabitIsEmpty extends GetAddedHabitState {
-  const GetAddedHabitIsEmpty();
-  @override
-  List<Object> get props => [];
 }

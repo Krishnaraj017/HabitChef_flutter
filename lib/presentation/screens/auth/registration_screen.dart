@@ -107,7 +107,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                         Padding(
                           padding: const EdgeInsets.only(top: 8, bottom: 48),
                           child: Text(
-                            'Login to your account',
+                            'Create your account',
                             style:
                                 Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       color: Colors.grey[600],

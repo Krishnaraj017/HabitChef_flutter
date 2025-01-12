@@ -26,6 +26,7 @@ import '../presentation/cubits/auth_cubit/registration_cubit.dart' as _i82;
 import '../presentation/cubits/get_added_habits_cubit/get_added_habits_cubit.dart'
     as _i609;
 import '../presentation/cubits/home/home_cubit.dart' as _i973;
+import '../presentation/cubits/progress_cubit/progress_cubit.dart' as _i920;
 import '../presentation/routes/app_router.dart' as _i591;
 import 'di_module.dart' as _i211;
 
@@ -43,6 +44,7 @@ extension GetItInjectableX on _i174.GetIt {
     final injectableModule = _$InjectableModule();
     gh.factory<_i1039.AddHabitCubit>(() => _i1039.AddHabitCubit());
     gh.factory<_i609.GetAddedHabitsCubit>(() => _i609.GetAddedHabitsCubit());
+    gh.factory<_i920.HabitStatsCubit>(() => _i920.HabitStatsCubit());
     gh.lazySingleton<_i361.Dio>(() => injectableModule.dio());
     gh.lazySingleton<_i591.AppRouter>(() => _i591.AppRouter());
     gh.lazySingleton<_i991.UserLocalDataSource>(

@@ -13,6 +13,7 @@ class GetAddedHabitsCubit extends Cubit<GetAddedHabitState> {
     if (habits.isEmpty) {
       print("pass++");
       emit(GetAddedHabitIsEmpty());
+      print("emitted");
     } else {
       emit(GetAddedHabitSuccess(habits));
     }
