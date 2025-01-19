@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habitchef/di/get_it.dart';
@@ -96,6 +97,8 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
       bool res =
           await context.read<RegistrationCubit>().checkIfUserIsLoggedIn();
       if (res) {
+        context.router.replaceAll([const HabitHomeRoute()]);
+      } else if (kIsWeb) {
         context.router.replaceAll([const HabitHomeRoute()]);
       } else {
         context.router.replaceAll([const RegistrationRoute()]);

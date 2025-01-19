@@ -252,6 +252,11 @@ class HabitDatabase {
     return maps;
   }
 
+  Future<void> clearDb() async {
+    final db = await instance.database;
+    await db.delete('habits');
+  }
+
   // Close database
   Future<void> close() async {
     final db = await instance.database;

@@ -19,8 +19,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<LoginResponse> login({required Map<String, dynamic> params}) async {
     print("calling here tpp");
-    final response =
-        await _apiClient.post(path: ApiConstants.login, params: params);
+    final response = await _apiClient.post(
+        path: ApiConstants.login, params: params, requiresToken: false);
     print(response);
     return LoginResponse.fromJson(response);
   }

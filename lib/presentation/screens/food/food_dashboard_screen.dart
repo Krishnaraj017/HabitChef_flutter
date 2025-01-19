@@ -230,8 +230,7 @@ class NutritionDashboardScreen extends StatelessWidget {
                                               Text(item),
                                             ],
                                           ),
-                                        ))
-                                    ,
+                                        )),
                                 const SizedBox(height: 8),
                                 if (meal['name'] != 'Dinner') const Divider(),
                                 if (meal['name'] != 'Dinner')

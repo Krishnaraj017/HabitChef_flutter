@@ -140,16 +140,6 @@ class _AddHabitScreenState extends State<AddHabitScreen>
                       _buildTimeSelector(),
                       const SizedBox(height: 48),
                       _buildSubmitButton(),
-                      const SizedBox(height: 100),
-                      Card(
-                        color: const Color.fromARGB(255, 188, 198, 203),
-                        elevation: 2,
-                        child: Align(
-                            alignment: Alignment
-                                .bottomCenter, // Places it in the bottom-right corner
-
-                            child: _buildTrackFood()),
-                      ),
                     ],
                   ),
                 ),
@@ -290,32 +280,6 @@ class _AddHabitScreenState extends State<AddHabitScreen>
             fontWeight: FontWeight.bold,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTrackFood() {
-    return Align(
-      child: FloatingActionButton.extended(
-        onPressed: () {
-          context.router.push(CameraRoute());
-          // Add your logic here
-        },
-        backgroundColor: Colors.blue,
-
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(22),
-        ),
-        elevation: 0,
-        label: const Text(
-          'Get Food insights',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        icon: const Icon(Icons.fastfood), // Add an icon if desired
       ),
     );
   }

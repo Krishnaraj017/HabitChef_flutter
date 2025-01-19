@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:habitchef/data/models/habit.dart';
 import 'package:habitchef/di/get_it.dart';
 import 'package:habitchef/presentation/cubits/add_habit_cubit/add_habit_cubit.dart';
+import 'package:habitchef/presentation/cubits/auth_cubit/registration_cubit.dart';
+import 'package:habitchef/presentation/cubits/auth_cubit/registration_state.dart';
 import 'package:habitchef/presentation/cubits/get_added_habits_cubit/get_added_habit_state.dart';
 import 'package:habitchef/presentation/cubits/get_added_habits_cubit/get_added_habits_cubit.dart';
 import 'package:habitchef/presentation/cubits/home/home_cubit.dart';
@@ -29,6 +31,7 @@ class HabitHomeScreen extends StatefulWidget implements AutoRouteWrapper {
           create: (_) => getIt<GetAddedHabitsCubit>()..getAllAddedHabits()),
       BlocProvider(create: (_) => getIt<HabitStatsCubit>()..fetchTodayStats()),
       BlocProvider(create: (_) => getIt<AddHabitCubit>()),
+      BlocProvider(create: (_) => getIt<RegistrationCubit>()),
     ], child: this);
   }
 }
@@ -57,11 +60,11 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
                           builder: (context, state) {
                             if (state is UserLoaded) {
                               return Text(
-                                // 'Hi, ${state.userName}!',
-                                'Hi',
+                                'Hi, ${state.userName}!',
+                                //'Hi',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headlineSmall
+                                    .titleLarge
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -80,13 +83,55 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        "HabitChef",
-                        style: TextStyle(color: Colors.blue, fontSize: 28),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              title: Text('Logout'),
+                              content: Text('Are you sure you want to logout?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () async {
+                                    var res = await context
+                                        .read<RegistrationCubit>()
+                                        .logOut();
+                                    if (res) {
+                                      context.router
+                                          .replaceAll([RegistrationRoute()]);
+                                    }
+                                    // var res = await context
+                                    //     .read<RegistrationCubit>()
+                                    //     .logOut();
+                                    // if (res) {
+
+                                    // }
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                  child: Text('Logout'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Text(
+                          "HabitChef",
+                          style: TextStyle(color: Colors.blue, fontSize: 28),
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -144,6 +189,13 @@ class _HabitTrackerHomeState extends State<HabitHomeScreen> {
               ),
             ),
 
+            SliverToBoxAdapter(
+              child: ElevatedButton(
+                  onPressed: () {
+                    context.router.push(NutritionDashboardRoute());
+                  },
+                  child: Text('food')),
+            ),
             // Habits List Header
             SliverToBoxAdapter(
               child: Padding(

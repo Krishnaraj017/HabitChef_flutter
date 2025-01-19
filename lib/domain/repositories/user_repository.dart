@@ -12,4 +12,5 @@ abstract class UserRepository {
   });
   Future<bool> isUserLoggedIn();
   Future<String?> getUser();
+  Future<bool> logout();
 }

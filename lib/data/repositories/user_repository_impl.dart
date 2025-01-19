@@ -40,6 +40,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<AppError, RegisterUserResponse>> registerUser(
       {required Map<String, dynamic> params}) {
     return ApiCallWithError.call(() async {
+      print("${params.entries}");
       var res = await _userRemoteDataSource.registerUser(params: params);
       print("repose res$res");
       await Future.wait(
@@ -64,6 +65,12 @@ class UserRepositoryImpl implements UserRepository {
   Future<String?> getUser() async {
     var res = await _userLocalDataSource.getUser();
     print(res);
+    return res;
+  }
+
+  @override
+  Future<bool> logout() async {
+    var res = await _userLocalDataSource.logOut();
     return res;
   }
 }

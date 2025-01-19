@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen>
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 48),
                       child: Text(
-                        'Create an account to get started',
+                        'Login to get started',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: Colors.grey[600],
                             ),

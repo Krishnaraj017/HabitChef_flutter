@@ -11,6 +11,7 @@ abstract class UserLocalDataSource {
   Future<void> clearUser();
   Future<void> stroeUserLoggedStatus();
   Future<bool> isUserLoggedIn();
+  Future<bool> logOut();
 }
 
 @LazySingleton(as: UserLocalDataSource)
@@ -23,6 +24,8 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
 
   @override
   Future<void> clearUser() async {
+    var box = Hive.box('userBox');
+    await box.clear();
     return;
   }
 
@@ -44,6 +47,12 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
     var box = Hive.box('userBox');
     box.put('isUserLoggedIn', true);
     return Future.value();
+  }
+
+  @override
+  Future<bool> logOut() async {
+    await clearUser();
+    return true;
   }
   // @override
   // Stream<User> watchUser() async* {

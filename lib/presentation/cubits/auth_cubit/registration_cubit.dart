@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:habitchef/data/models/habit.dart';
 import 'package:habitchef/domain/entities/params/login_params.dart';
 import 'package:habitchef/domain/entities/params/registration_params.dart';
 import 'package:habitchef/domain/repositories/user_repository.dart';
@@ -11,6 +12,9 @@ class RegistrationCubit extends Cubit<RegistrationState> {
   RegistrationCubit(this._userRepository) : super(RegistrationInitial());
   Future<void> register({email, loginPassword, userName}) async {
     emit(RegistrationLoading());
+    print(email);
+    print(loginPassword);
+    print(userName);
     try {
       final res = await _userRepository.registerUser(
           params: RegistrationParams(
@@ -18,6 +22,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
         password: loginPassword,
         username: userName,
       ).toJson());
+
       print(res);
       res.fold(
         (l) => emit(RegistrationFailedState()),
@@ -59,5 +64,9 @@ class RegistrationCubit extends Cubit<RegistrationState> {
     return res;
   }
 
- 
+  Future<bool> logOut() async {
+    await HabitDatabase.instance.clearDb();
+    await _userRepository.logout();
+    return true;
+  }
 }

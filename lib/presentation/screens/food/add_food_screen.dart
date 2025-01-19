@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:habitchef/presentation/routes/app_router.dart';
 
 @RoutePage()
 class AddFoodScreen extends StatefulWidget {
@@ -54,7 +55,9 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                         child: TextField(
                           controller: _searchController,
                           onChanged: (value) {
-                            print(_searchController.text);
+                            if (value.length >= 2) {
+                              print(_searchController.text);
+                            }
                             // Implement search functionality
                           },
                           decoration: InputDecoration(
@@ -77,6 +80,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                       ),
                       child: IconButton(
                         onPressed: () {
+                          context.router.push(CameraRoute());
                           // Implement camera functionality
                         },
                         icon: const Icon(Icons.camera_alt, color: Colors.white),
